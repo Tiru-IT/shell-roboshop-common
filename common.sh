@@ -9,6 +9,7 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log" #/var/log/shell-roboshop/mongodb.log
+MONGODB_HOST="mongodb.tirusatrapu.fun"
 
 mkdir -p $LOGS_FOLDER
 SATRT_TIME=$(date +%s)
