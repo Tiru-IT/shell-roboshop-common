@@ -9,7 +9,10 @@ N="\e[0m"
 LOGS_FOLDER="/var/log/shell-roboshop"
 SCRIPT_NAME=$( echo $0 | cut -d "." -f1)
 LOG_FILE="$LOGS_FOLDER/$SCRIPT_NAME.log" #/var/log/shell-roboshop/mongodb.log
+
 MONGODB_HOST="mongodb.tirusatrapu.fun"
+MYSQL_HOST="mysql.tirusatrapu.fun"
+
 SCRIPT_DIR=$PWD
 
 mkdir -p $LOGS_FOLDER
@@ -80,6 +83,19 @@ java_setup(){
     mv target/shipping-1.0.jar shipping.jar &>>$LOG_FILE
     VALIDATE $? "Renaming the artifact"
 }
+clint_mysql(){
+    dnf install mysql -y &>>$LOG_FILE
+    VALIDATE $? "install mysql"
+
+    mysql -h $MYSQL_HOST -uroot -pRoboShop@1 -e 'use cities' &>>$LOG_FILE
+    if [ $? -ne 0 ]; then
+        mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/schema.sql &>>$LOG_FILE
+        mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/app-user.sql &>>$LOG_FILE
+        mysql -h $MYSQL_HOST -uroot -pRoboShop@1 < /app/db/master-data.sql &>>$LOG_FILE
+    else
+        echo -e "Shipping data is already loaded ... $Y SKIPPING $N"
+    fi
+}
 
 pytho_setup(){
     dnf install python3 gcc python3-devel -y &>>$LOG_FILE
@@ -107,7 +123,7 @@ mongodb_setup(){
     VALIDATE $? "Allowing remote connections to MongoDB"
 
 }
-mysql_ssetup(){
+mysql_setup(){
     dnf install mysql-server -y &>>$LOG_FILE
     VALIDATE $? "install mysql"
 
