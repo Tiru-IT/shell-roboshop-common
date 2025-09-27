@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./comman.sh
+source ./common.sh
 
 check_root
 redis_setup
