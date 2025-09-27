@@ -191,6 +191,8 @@ nginx_setup(){
     VALIDATE $? "unzip the code"
 
     cp $SCRIPT_DIR/nginx.conf /etc/nginx/nginx.conf &>>$LOG_FILE
+    systemctl restart nginx 
+    VALIDATE $? "restart nginx"
 }
 
 systemd_setup(){
