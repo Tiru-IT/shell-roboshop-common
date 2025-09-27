@@ -183,6 +183,21 @@ systemd_setup(){
     VALIDATE $? "Enable $app_name"
 }
 
+mongosh_setup(){
+    dnf install mongodb-mongosh -y &>>$LOG_FILE
+    VALIDATE $? "install mongodb-mongosh"
+
+
+    INDEX=$(mongosh mongodb.tirusatrapu.fun --quiet --eval "db.getMongo().getDBNames().indexOf('catalogue')")
+    if [ $INDEX -le 0 ]; then
+        mongosh --host $MONGODB_HOST </app/db/master-data.js &>>$LOG_FILE
+        VALIDATE $? "Load catalogue products"
+    else
+        echo -e "Catalogue products already loaded ... $Y SKIPPING $N"
+    fi
+
+}
+
 app_restart(){
     systemctl restart $app_name
     VALIDATE $? "Restarted $app_namee"
