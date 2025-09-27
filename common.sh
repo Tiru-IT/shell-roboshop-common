@@ -97,7 +97,7 @@ clint_mysql(){
     fi
 }
 
-pytho_setup(){
+pythone3_setup(){
     dnf install python3 gcc python3-devel -y &>>$LOG_FILE
     VALIDATE $? "install pytho3"
 
