@@ -128,8 +128,9 @@ redis_setup(){
     echo -e "redis install $G SUCCESS $N"
 
     sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf &>>$LOG_FILE
-    #sed -i -e 's/127.0.0.1/0.0.0.0/g' -e '/protected-mode/ c protected-mode no' /etc/redis/redis.conf
-    systemctl enable redis &>>$LOG_FILE
+    systemctl enable redis &>>$LOG_FILE &>>LOG_FILE
+    systemctl start redis 
+    echo -e "redis start $G SUCCESS $N"
 }
 
 raabbitmq_setup(){
@@ -187,7 +188,7 @@ systemd_setup(){
 
 mongosh_setup(){
     cp $SCRIPT_DIR/mongo.repo /etc/yum.repos.d/mongo.repo
-    
+
     dnf install mongodb-mongosh -y &>>$LOG_FILE
     VALIDATE $? "install mongodb-mongosh"
 
